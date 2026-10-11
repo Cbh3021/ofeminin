@@ -7,8 +7,9 @@ import { partner } from "./locales/partner";
 import { pregnancy } from "./locales/pregnancy";
 import { postpartum } from "./locales/postpartum";
 import { selfexam } from "./locales/selfexam";
+import { hcg } from "./locales/hcg";
 
-const modules = { common, auth, settings, home, profile, partner, pregnancy, postpartum, selfexam };
+const modules = { common, auth, settings, home, profile, partner, pregnancy, postpartum, selfexam, hcg };
 
 function buildLang(lang) {
   const out = {};

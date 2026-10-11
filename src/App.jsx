@@ -10,6 +10,7 @@ import CyclePartner from "./CyclePartner";
 import CyclePregnancy from "./CyclePregnancy";
 import CyclePostPartum from "./CyclePostPartum";
 import CycleSelfExam from "./CycleSelfExam";
+import CycleHcg from "./CycleHcg";
 import { useCycleSettings, useGrossesse } from "./useCycleData";
 import { scheduleCycleNotifications } from "./capacitorNotifications";
 import CopyrightFooter from "./CopyrightFooter";
@@ -106,12 +107,15 @@ export default function App() {
           <CycleProfile
             onOpenPartner={() => setTab("partner")}
             onOpenSelfExam={() => setTab("selfexam")}
+            onOpenHcg={() => setTab("hcg")}
           />
         );
       case "partner":
         return <CyclePartner onBack={() => setTab("profile")} />;
       case "selfexam":
         return <CycleSelfExam onBack={() => setTab("profile")} />;
+      case "hcg":
+        return <CycleHcg onBack={() => setTab("profile")} />;
       default:
         return renderHomeTab();
     }

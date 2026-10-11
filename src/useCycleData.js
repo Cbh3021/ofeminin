@@ -403,3 +403,81 @@ export function useHealthProfile() {
 
   return { profile, loading, saveProfile };
 }
+
+// ---------- Suivi β-hCG quantitative (users/{uid}/hcgSuivi) ----------
+// Un document par dosage : { d: "YYYY-MM-DDTHH:mm" (heure locale du prélèvement), v: UI/L }.
+// Le contexte clinique (grossesse débutante, post-fausse couche, méthotrexate, môle),
+// l'échographie et la date d'injection du méthotrexate sont conservés dans
+// users/{uid}/settings/hcg.
+
+export function useHcgSuivi() {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let unsubSnap = () => {};
+    const unsubAuth = onAuthStateChanged(auth, (u) => {
+      unsubSnap();
+      if (!u) {
+        setItems([]);
+        setLoading(false);
+        return;
+      }
+      unsubSnap = onSnapshot(
+        collection(db, "users", u.uid, "hcgSuivi"),
+        (snap) => {
+          setItems(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+          setLoading(false);
+        },
+        () => setLoading(false)
+      );
+    });
+    return () => {
+      unsubSnap();
+      unsubAuth();
+    };
+  }, []);
+
+  return { items, loading };
+}
+
+export async function addHcg({ d, v }) {
+  const uid = requireUid();
+  return addDoc(collection(db, "users", uid, "hcgSuivi"), { d, v, createdAt: serverTimestamp() });
+}
+
+export async function removeHcg(id) {
+  const uid = requireUid();
+  return deleteDoc(doc(db, "users", uid, "hcgSuivi", id));
+}
+
+const DEFAULT_HCG_SETTINGS = { ctx: "early", us: "none", mtx: "" };
+
+export function useHcgSettings() {
+  const [settings, setSettings] = useState(DEFAULT_HCG_SETTINGS);
+
+  useEffect(() => {
+    let unsubSnap = () => {};
+    const unsubAuth = onAuthStateChanged(auth, (u) => {
+      unsubSnap();
+      if (!u) return;
+      unsubSnap = onSnapshot(
+        doc(db, "users", u.uid, "settings", "hcg"),
+        (snap) => setSettings({ ...DEFAULT_HCG_SETTINGS, ...(snap.exists() ? snap.data() : {}) }),
+        () => {}
+      );
+    });
+    return () => {
+      unsubSnap();
+      unsubAuth();
+    };
+  }, []);
+
+  const saveHcgSettings = useCallback(async (patch) => {
+    const uid = requireUid();
+    setSettings((prev) => ({ ...prev, ...patch })); // mise à jour optimiste
+    await setDoc(doc(db, "users", uid, "settings", "hcg"), patch, { merge: true });
+  }, []);
+
+  return { settings, saveHcgSettings };
+}

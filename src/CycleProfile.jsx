@@ -420,7 +420,7 @@ function DxBlock({ title, icon, dxList, explorationsList, orientation, labels })
 // COMPOSANT
 // ============================================================
 
-export default function CycleProfile({ onOpenPartner, onOpenSelfExam }) {
+export default function CycleProfile({ onOpenPartner, onOpenSelfExam, onOpenHcg }) {
   const { t } = useLanguage();
   const { profile, loading, saveProfile } = useHealthProfile();
   const { settings: cycleSettings, loading: cycleLoading } = useCycleSettings();
@@ -773,6 +773,21 @@ export default function CycleProfile({ onOpenPartner, onOpenSelfExam }) {
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-[#1E293B]">{t("profile.selfExamCardTitle")}</p>
             <p className="text-[12px] text-[#64748B]">{t("profile.selfExamCardDesc")}</p>
+          </div>
+          <ChevronRight size={18} className="text-[#94A3B8] shrink-0" />
+        </button>
+
+        {/* Passerelle vers le suivi β-hCG quantitative */}
+        <button
+          onClick={onOpenHcg}
+          className="w-full flex items-center gap-3 bg-white rounded-2xl p-4 shadow-sm border border-[#F0DCE4] active:bg-[#FBE8F0] text-left"
+        >
+          <div className="w-10 h-10 rounded-full bg-[#FCE4ED] flex items-center justify-center shrink-0">
+            <Activity size={18} className="text-[#E1396C]" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-[#1E293B]">{t("hcg.cardTitle")}</p>
+            <p className="text-[12px] text-[#64748B]">{t("hcg.cardDesc")}</p>
           </div>
           <ChevronRight size={18} className="text-[#94A3B8] shrink-0" />
         </button>
