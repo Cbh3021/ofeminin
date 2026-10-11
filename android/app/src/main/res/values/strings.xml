@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">ôfemme</string>
+    <string name="title_activity_main">ôfemme</string>
+    <string name="package_name">com.aufeminin.app</string>
+    <string name="custom_url_scheme">com.aufeminin.app</string>
+</resources>

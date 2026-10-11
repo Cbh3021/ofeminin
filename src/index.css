@@ -1,0 +1,193 @@
+@import "tailwindcss";
+
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  color-scheme: light;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #FBF5F7;
+}
+
+body {
+  overscroll-behavior: none; /* évite l'effet de rebond blanc en haut/bas sur Android */
+  -webkit-tap-highlight-color: transparent; /* évite le flash gris au tap sur Android/Chrome WebView */
+}
+
+/* Cible tactile confortable et pas de délai de tap fantôme dans la WebView Android */
+button,
+a,
+input[type="range"],
+[role="button"] {
+  touch-action: manipulation;
+}
+
+/* Empêche le zoom automatique à la saisie dans certaines WebView Android/iOS
+   tout en gardant une taille de police lisible et cohérente. */
+input,
+select,
+textarea {
+  font-size: 16px;
+}
+
+/* En-tête de page : réserve la place de la barre de statut Android/iOS
+   (nécessite viewport-fit=cover dans index.html pour que --safe-top soit
+   non nul) tout en gardant un espacement cohérent sur toutes les pages. */
+.page-header {
+  padding-top: calc(2rem + var(--safe-top));
+}
+@media (min-width: 640px) {
+  .page-header {
+    padding-top: calc(2.5rem + var(--safe-top));
+  }
+}
+
+.page-header-lg {
+  padding-top: calc(3.5rem + var(--safe-top));
+}
+
+/* Petite poignée visuelle en haut des feuilles/modales du bas, convention
+   Material Design pour signaler qu'un panneau est glissable/fermable. */
+.sheet-handle {
+  width: 2.5rem;
+  height: 0.25rem;
+  border-radius: 9999px;
+  background-color: #F0DCE4;
+  margin: 0 auto 1rem auto;
+}
+
+/* Écran de connexion : entrée en cascade plus marquée (glissement +
+   fondu ample), en 3 temps (sélecteur de langue, en-tête, formulaire)
+   pour un effet de cascade bien visible. */
+@keyframes auth-fade-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.auth-fade-in {
+  opacity: 0;
+  animation: auth-fade-slide-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.auth-fade-in-1 {
+  animation-delay: 0.05s;
+}
+.auth-fade-in-2 {
+  animation-delay: 0.2s;
+}
+.auth-fade-in-3 {
+  animation-delay: 0.38s;
+}
+
+/* Badge d'icône : petit rebond d'entrée suivi d'une pulsation continue
+   bien visible (halo qui s'étend nettement) pour donner du dynamisme
+   sans devenir criard. */
+@keyframes auth-icon-pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) rotate(-12deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.12) rotate(4deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes auth-icon-breathe {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(225, 57, 108, 0.35);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 14px rgba(225, 57, 108, 0);
+  }
+}
+
+.auth-icon-breathe {
+  animation:
+    auth-icon-pop-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both,
+    auth-icon-breathe 2.4s ease-in-out 0.6s infinite;
+}
+
+/* Cercles décoratifs flous qui dérivent doucement en fond de l'écran de
+   connexion, pour donner de la vie sans distraire du formulaire. */
+.auth-bg-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(40px);
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.auth-bg-blob-1 {
+  width: 220px;
+  height: 220px;
+  top: -60px;
+  right: -60px;
+  background: #F9A8C9;
+  animation: auth-blob-drift-1 9s ease-in-out infinite;
+}
+
+.auth-bg-blob-2 {
+  width: 180px;
+  height: 180px;
+  top: 120px;
+  left: -70px;
+  background: #FBCFE8;
+  animation: auth-blob-drift-2 11s ease-in-out infinite;
+}
+
+.auth-bg-blob-3 {
+  width: 140px;
+  height: 140px;
+  bottom: 60px;
+  right: 10px;
+  background: #FDE2ED;
+  animation: auth-blob-drift-1 13s ease-in-out infinite reverse;
+}
+
+@keyframes auth-blob-drift-1 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-18px, 22px) scale(1.12);
+  }
+}
+
+@keyframes auth-blob-drift-2 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(20px, -16px) scale(1.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-fade-in,
+  .auth-icon-breathe,
+  .auth-bg-blob-1,
+  .auth-bg-blob-2,
+  .auth-bg-blob-3 {
+    animation: none;
+    opacity: 1;
+  }
+}
