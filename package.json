@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "electron": "vite build --mode electron && electron .",
+    "dist:win": "vite build --mode electron && electron-builder --win --x64"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",
@@ -26,6 +28,41 @@
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
     "oxlint": "^1.81.0",
-    "vite": "^8.3.0"
+    "vite": "^8.3.0",
+    "electron": "22.3.27",
+    "electron-builder": "24.13.3"
+  },
+  "main": "electron/main.cjs",
+  "productName": "Au Féminin",
+  "description": "Au Féminin — suivi du cycle et de la grossesse",
+  "author": "Dr. Hédi Belhoula",
+  "build": {
+    "appId": "com.belhoula.aufeminin",
+    "productName": "Au Féminin",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "artifactName": "AuFeminin-Setup-${version}.exe",
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    }
   }
 }
